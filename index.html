@@ -396,6 +396,7 @@ function switchTab(tab, el) {
   document.getElementById('dzLabel').textContent = isRP ? 'Drop .zip / .png files here' : 'Drop .jar files here';
   document.getElementById('fileInput').accept = isRP ? '.zip,.png' : '.jar';
   document.getElementById('mainTitle').textContent = isRP ? 'Resource Pack Updates' : 'Mod Updates';
+  document.getElementById('mainSubtitle').textContent = isRP ? 'Upload your resource packs on the left to get started' : 'Upload your mods on the left to get started';
 
   // Reset
   files = [];
