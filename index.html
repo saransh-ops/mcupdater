@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Minecraft Mod Updater</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oxanium:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -226,24 +226,161 @@ select option{background:#111827}
 .modal-close:hover{color:var(--text)}
 .modal-body{padding:16px 20px;overflow-y:auto;font-size:.8rem;color:var(--text2);line-height:1.7;white-space:pre-wrap;word-break:break-word}
 .modal-body::-webkit-scrollbar{width:4px}
-.modal-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+/* ── BACKGROUND CANVAS ── */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.3}
+
+/* ── LOGO ── */
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand-logo{width:34px;height:34px;flex-shrink:0}
+.brand-logo svg{width:34px;height:34px;filter:drop-shadow(0 0 7px rgba(34,197,94,.55))}
+.brand-name{line-height:1.1}
+.brand-name .bmc{font-family:'Oxanium',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);display:block}
+.brand-name .bmain{font-family:'Oxanium',sans-serif;font-size:1rem;font-weight:800;color:var(--text);letter-spacing:-.3px}
+.brand-name .bmain span{color:var(--green)}
+
+/* ── NAV ICON BUTTONS ── */
+.icon-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--text2);cursor:pointer;font-size:.72rem;font-weight:700;padding:4px 9px;font-family:'Space Mono',monospace;transition:.15s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.icon-btn:hover{background:var(--surface2);color:var(--text);border-color:var(--border2)}
+
+/* ── SHARED MODAL OVERLAY ── */
+.xmodal-bg{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(5px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.xmodal-bg.open{display:flex}
+.xmodal{background:var(--surface);border:1px solid var(--border2);border-radius:14px;width:100%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 28px 70px rgba(0,0,0,.6)}
+.xmodal-hdr{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.xmodal-hdr h2{font-family:'Oxanium',sans-serif;font-size:.95rem;font-weight:800;flex:1}
+.xmodal-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:1.3rem;line-height:1;padding:2px 6px;border-radius:4px;margin-left:auto}
+.xmodal-close:hover{color:var(--text);background:var(--surface3)}
+.xmodal-body{padding:18px 22px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
+.xmodal-body::-webkit-scrollbar{width:4px}
+.xmodal-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── INFO MODAL ── */
+.info-modal{max-width:640px}
+.isec h3{font-size:.6rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.isec h3::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(34,197,94,.3),transparent)}
+.isec p{font-size:.8rem;color:var(--text2);line-height:1.7}
+.step-list{display:flex;flex-direction:column;gap:7px}
+.step-row{display:flex;align-items:flex-start;gap:10px;font-size:.78rem;color:var(--text2);line-height:1.5}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--green-dim);border:1px solid rgba(34,197,94,.3);color:var(--green);font-size:.65rem;font-weight:700;display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+.abbv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:7px}
+.abbv-row{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;display:flex;align-items:flex-start;gap:9px}
+.abbv-badge{font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;color:var(--green);background:var(--green-dim);border:1px solid rgba(34,197,94,.2);border-radius:4px;padding:2px 6px;flex-shrink:0;white-space:nowrap;margin-top:1px}
+.abbv-text{font-size:.73rem;color:var(--text2);line-height:1.4}
+.abbv-text strong{color:var(--text);font-weight:600}
+
+/* ── TOS MODAL ── */
+.tos-modal{max-width:540px}
+.tos-block{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 15px}
+.tos-block h4{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--text3);margin-bottom:6px}
+.tos-block p,.tos-block ul{font-size:.77rem;color:var(--text2);line-height:1.65}
+.tos-block ul{padding-left:16px;margin-top:4px}
+.tos-block ul li{margin-bottom:3px}
+.tos-hl{color:var(--yellow);font-weight:600}
+.tos-api{display:inline-flex;align-items:center;gap:4px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.2);border-radius:4px;padding:1px 7px;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--blue)}
 </style>
 </head>
 <body>
 
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.28"></canvas>
+
+<!-- INFO MODAL -->
+<div class="xmodal-bg" id="infoModal" onclick="if(event.target===this)closeInfo()">
+  <div class="xmodal info-modal">
+    <div class="xmodal-hdr">
+      <svg width="24" height="24" viewBox="0 0 36 36" style="flex-shrink:0;filter:drop-shadow(0 0 6px rgba(34,197,94,.5))"><defs><linearGradient id="lgi" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#4ade80"/></linearGradient></defs><polygon points="18,2 32,10 32,26 18,34 4,26 4,10" fill="rgba(34,197,94,0.12)" stroke="url(#lgi)" stroke-width="1.5"/><rect x="15" y="17" width="6" height="8" rx="1" fill="url(#lgi)"/><polygon points="18,8 24,18 12,18" fill="url(#lgi)"/></svg>
+      <h2>About — MC Mod Updater</h2>
+      <button class="xmodal-close" onclick="closeInfo()">×</button>
+    </div>
+    <div class="xmodal-body">
+      <div class="isec">
+        <h3>Description</h3>
+        <p>MC Mod Updater is a <strong style="color:var(--text)">browser-based tool</strong> that checks your Minecraft mods and resource packs for updates using the <strong style="color:var(--text)">Modrinth API</strong>. No installation required — drop your files in, pick your MC version &amp; loader, and it instantly shows what's up to date, what needs updating, and what's unavailable for your version.</p>
+      </div>
+      <div class="isec">
+        <h3>How to use</h3>
+        <div class="step-list">
+          <div class="step-row"><div class="step-num">1</div><span>Choose your <strong style="color:var(--text)">Minecraft version</strong>, mod loader, and release channel in the sidebar.</span></div>
+          <div class="step-row"><div class="step-num">2</div><span>Switch between <strong style="color:var(--text)">Mods</strong> (.jar) and <strong style="color:var(--text)">Resource Packs</strong> (.zip/.png) using the tabs.</span></div>
+          <div class="step-row"><div class="step-num">3</div><span><strong style="color:var(--text)">Drop your files</strong> into the upload zone or click to browse. Check/uncheck what to include.</span></div>
+          <div class="step-row"><div class="step-num">4</div><span>Click <strong style="color:var(--text)">Check for Updates</strong>. Files are SHA-1 hashed locally — only the hash is sent to Modrinth.</span></div>
+          <div class="step-row"><div class="step-num">5</div><span>Results show status badges. Use <strong style="color:var(--text)">Download All</strong> or <strong style="color:var(--text)">Needs Update Only</strong> to grab a ZIP.</span></div>
+        </div>
+      </div>
+      <div class="isec">
+        <h3>Status &amp; abbreviation meanings</h3>
+        <div class="abbv-grid">
+          <div class="abbv-row"><span class="abbv-badge">✨ Update Available</span><div class="abbv-text"><strong>Needs Update</strong> — a newer version exists for your MC version</div></div>
+          <div class="abbv-row"><span class="abbv-badge">✓ Up to date</span><div class="abbv-text"><strong>Installed</strong> — your file matches the latest release</div></div>
+          <div class="abbv-row"><span class="abbv-badge">⚠ Older Version</span><div class="abbv-text"><strong>Outdated</strong> — an older release of this mod is installed</div></div>
+          <div class="abbv-row"><span class="abbv-badge">MC Ver</span><div class="abbv-text"><strong>Minecraft Version</strong> — e.g. 1.21.4, 1.20.1</div></div>
+          <div class="abbv-row"><span class="abbv-badge">SHA-1</span><div class="abbv-text"><strong>Secure Hash Algorithm 1</strong> — fingerprint used to identify your exact file</div></div>
+          <div class="abbv-row"><span class="abbv-badge">RP</span><div class="abbv-text"><strong>Resource Pack</strong> — texture/sound override packs (.zip or .png)</div></div>
+          <div class="abbv-row"><span class="abbv-badge">dl</span><div class="abbv-text"><strong>Downloads</strong> — total download count shown on Modrinth</div></div>
+          <div class="abbv-row"><span class="abbv-badge">Release</span><div class="abbv-text"><strong>Stable release</strong> — fully tested, production-ready version</div></div>
+          <div class="abbv-row"><span class="abbv-badge">Beta</span><div class="abbv-text"><strong>Beta</strong> — feature-complete but may have minor bugs</div></div>
+          <div class="abbv-row"><span class="abbv-badge">Alpha</span><div class="abbv-text"><strong>Alpha</strong> — early/experimental, expect instability</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOS MODAL -->
+<div class="xmodal-bg" id="tosModal" onclick="if(event.target===this)closeTos()">
+  <div class="xmodal tos-modal">
+    <div class="xmodal-hdr">
+      <h2>📄 Terms of Service</h2>
+      <button class="xmodal-close" onclick="closeTos()">×</button>
+    </div>
+    <div class="xmodal-body">
+      <div class="tos-block">
+        <h4>Powered by Modrinth API</h4>
+        <p>This tool uses the <span class="tos-api">api.modrinth.com/v2</span> public API to identify mods and fetch version data. Usage is subject to <a href="https://modrinth.com/legal/terms" target="_blank" style="color:var(--blue)">Modrinth's Terms of Service</a>.</p>
+      </div>
+      <div class="tos-block">
+        <h4>⚡ Rate Limits</h4>
+        <p>Modrinth enforces API rate limits. Checking too many mods in rapid succession may cause requests to be throttled or fail. <span class="tos-hl">Recommended: check fewer than 50 mods at a time</span> and wait a moment between runs if you encounter errors.</p>
+      </div>
+      <div class="tos-block">
+        <h4>🔒 Privacy &amp; Data</h4>
+        <p>All file hashing happens <strong style="color:var(--text)">entirely in your browser</strong>. Your actual mod files are never uploaded — only the SHA-1 hash string is sent to Modrinth. No personal data is collected or stored by this tool.</p>
+      </div>
+      <div class="tos-block">
+        <h4>📦 Downloads</h4>
+        <p>Download links point directly to Modrinth's CDN. This tool does not host, redistribute, or modify any mod files.</p>
+      </div>
+      <div class="tos-block">
+        <h4>⚠ Disclaimer</h4>
+        <ul>
+          <li>This tool is unofficial and not affiliated with Modrinth or Mojang.</li>
+          <li>Only mods listed on Modrinth can be identified — others show as "Not Found".</li>
+          <li>Always verify compatibility before installing any update.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- TOP NAV -->
 <nav class="topnav">
   <div class="brand">
-    <div class="brand-icon">🧩</div>
-    <div class="brand-name">MC Mod <span>Updater</span></div>
+    <div class="brand-logo">
+      <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#4ade80"/></linearGradient><filter id="gf"><feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><polygon points="18,2 32,10 32,26 18,34 4,26 4,10" fill="rgba(34,197,94,0.12)" stroke="url(#lg1)" stroke-width="1.5"/><g filter="url(#gf)"><rect x="15" y="18" width="6" height="8" rx="1" fill="url(#lg1)"/><polygon points="18,8 24,19 12,19" fill="url(#lg1)"/></g></svg>
+    </div>
+    <div class="brand-name">
+      <span class="bmc">Minecraft</span>
+      <span class="bmain">Mod <span>Updater</span></span>
+    </div>
   </div>
   <div class="nav-divider"></div>
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('mods',this)">🧩 Mods</button>
-    <button class="tab" onclick="switchTab('resourcepacks',this)">🎨 Resource Packs</button>
+    <button class="tab active" onclick="switchTab('mods',this)">⚙ Mods</button>
+    <button class="tab" onclick="switchTab('resourcepacks',this)">🧱 Resource Packs</button>
   </div>
   <div class="nav-right">
     <span class="status-pill sp-green" id="navStatus" style="display:none"></span>
+    <button class="icon-btn" onclick="openInfo()">ℹ Info</button>
+    <button class="icon-btn" onclick="openTos()">📄 ToS</button>
   </div>
 </nav>
 
@@ -330,7 +467,7 @@ select option{background:#111827}
       <div class="progress-wrap" id="progressWrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
 
       <div id="emptyState" class="empty-state">
-        <div class="empty-state-icon" id="emptyIcon">🧩</div>
+        <div class="empty-state-icon" id="emptyIcon">⚙</div>
         <p id="emptyText">No mods loaded yet</p>
         <small id="emptySmall">Upload your .jar mod files using the sidebar</small>
       </div>
@@ -392,7 +529,7 @@ function switchTab(tab, el) {
   const isRP = tab === 'resourcepacks';
   document.getElementById('loaderField').style.display = isRP ? 'none' : '';
   document.getElementById('uploadLabel').textContent = isRP ? 'Upload Resource Packs' : 'Upload Mods';
-  document.getElementById('dzIcon').textContent = isRP ? '🎨' : '📦';
+  document.getElementById('dzIcon').textContent = isRP ? '🎴' : '📦';
   document.getElementById('dzLabel').textContent = isRP ? 'Drop .zip / .png files here' : 'Drop .jar files here';
   document.getElementById('fileInput').accept = isRP ? '.zip,.png' : '.jar';
   document.getElementById('mainTitle').textContent = isRP ? 'Resource Pack Updates' : 'Mod Updates';
@@ -494,7 +631,7 @@ function resetResults() {
   document.getElementById('emptyState').style.display='';
   document.getElementById('navStatus').style.display='none';
   const isRP = currentTab==='resourcepacks';
-  document.getElementById('emptyIcon').textContent = isRP?'🎨':'🧩';
+  document.getElementById('emptyIcon').textContent = isRP?'🧱':'⚙';
   document.getElementById('emptyText').textContent = isRP?'No resource packs loaded yet':'No mods loaded yet';
   document.getElementById('emptySmall').textContent = isRP?'Upload your resource pack files using the sidebar':'Upload your .jar mod files using the sidebar';
 }
@@ -679,8 +816,8 @@ function renderCard(card, mod, modIdx) {
   const rpTag = mod.isRP ? `<span class="tag tag-rp">resource pack</span>` : '';
 
   const iconHtml = proj.icon_url
-    ? `<div class="mc-icon"><img src="${proj.icon_url}" alt="" onerror="this.parentElement.innerHTML='${mod.isRP?'🎨':'🧩'}'"></div>`
-    : `<div class="mc-icon">${mod.isRP?'🎨':'🧩'}</div>`;
+    ? `<div class="mc-icon"><img src="${proj.icon_url}" alt="" onerror="this.parentElement.innerHTML='${mod.isRP?'🧱':'⚙'}'"></div>`
+    : `<div class="mc-icon">${mod.isRP?'🧱':'⚙'}</div>`;
 
   const verOptions = mod.versions.map((v, i) => `<option value="${i}" ${v.selected?'selected':''}>${v.version_number}</option>`).join('');
   const verPicker = mod.versions.length > 1
@@ -833,11 +970,69 @@ async function apiFetch(url) {
   try { const r=await fetch(url,{headers:{'User-Agent':'MC-Mod-Updater/2.0'}}); return r.ok?await r.json():null; } catch(e){ return null; }
 }
 
-async function sha1File(file) {
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Info / TOS modals
+// ─────────────────────────────────────────────────────────────────────────────
+function openInfo(){ document.getElementById('infoModal').classList.add('open'); }
+function closeInfo(){ document.getElementById('infoModal').classList.remove('open'); }
+function openTos(){ document.getElementById('tosModal').classList.add('open'); }
+function closeTos(){ document.getElementById('tosModal').classList.remove('open'); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeInfo(); closeTos(); } });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Animated background
+// ─────────────────────────────────────────────────────────────────────────────
+(function(){
+  const cv=document.getElementById('bgCanvas'), cx=cv.getContext('2d');
+  const HEX='0123456789ABCDEF';
+  function rh(){return Array.from({length:8},()=>HEX[Math.floor(Math.random()*16)]).join('');}
+  function resize(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+  resize(); window.addEventListener('resize',resize);
+  const pts=[];
+  for(let i=0;i<50;i++){
+    pts.push({
+      x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight,
+      vx:(Math.random()-.5)*.12, vy:.1+Math.random()*.22,
+      a:.06+Math.random()*.18, sz:Math.random()*1.8+.6,
+      txt:Math.random()<.4?rh():null, life:0, max:500+Math.random()*700
+    });
+  }
+  function tick(){
+    cx.clearRect(0,0,cv.width,cv.height);
+    pts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.life++;
+      const fade=Math.min(1,p.life/50)*Math.min(1,(p.max-p.life)/50);
+      cx.globalAlpha=p.a*fade;
+      if(p.txt){
+        cx.fillStyle='#22c55e';
+        cx.font=`${8+p.sz*2}px monospace`;
+        cx.fillText(p.txt,p.x,p.y);
+        if(Math.random()<.002) p.txt=rh();
+      } else {
+        cx.fillStyle='#22c55e';
+        cx.beginPath(); cx.arc(p.x,p.y,p.sz,0,Math.PI*2); cx.fill();
+      }
+      cx.globalAlpha=1;
+      if(p.life>p.max||p.y>cv.height+20){
+        p.x=Math.random()*cv.width; p.y=-10;
+        p.life=0; p.max=500+Math.random()*700;
+        p.txt=Math.random()<.4?rh():null;
+      }
+    });
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+async function computeSHA1(file) {
   const buf = await file.arrayBuffer();
   const hash = await crypto.subtle.digest('SHA-1', buf);
-  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 }
+
 </script>
 </body>
 </html>
