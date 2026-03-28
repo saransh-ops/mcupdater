@@ -642,6 +642,13 @@ function resetResults() {
   document.getElementById('emptySmall').textContent = isRP?'Upload your resource pack files using the sidebar':'Upload your .jar mod files using the sidebar';
 }
 
+
+async function sha1File(file) {
+  const buffer = await file.arrayBuffer();
+  const hashBuffer = await crypto.subtle.digest("SHA-1", buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+}
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN SEARCH
 // ─────────────────────────────────────────────────────────────────────────────
